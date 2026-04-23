@@ -11,8 +11,7 @@ import matplotlib.pyplot as plt
 from Core.resnet_model import AudioResNet
 from Core.gtzan_dataset import GENRES
 
-# Device Selection -> will use the device's CPU if it's not an Apple device.
-device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
+device = torch.device("cpu")
 
 # Confidence Threshold (< .20%)
 NATURE_CONFIDENCE_THRESHOLD = 0.20

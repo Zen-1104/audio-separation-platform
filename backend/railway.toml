@@ -1,5 +1,6 @@
 [build]
-builder = "nixpacks"
+builder = "dockerfile"
+dockerfilePath = "Dockerfile"
 
 [deploy]
-startCommand = "python3 Api/app.py"
+startCommand = "gunicorn Api.app:app --bind 0.0.0.0:$PORT --timeout 300 --workers 1"

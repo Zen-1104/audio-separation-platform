@@ -52,7 +52,7 @@ def run_demucs(file_path):
     Returns (output_folder_path, base_name) or None on failure.
     """
     command = [
-        "python3", "-m", "demucs.separate",
+        sys.executable, "-m", "demucs.separate",
         "-n", "htdemucs",
         "--out", "separated",
         file_path
