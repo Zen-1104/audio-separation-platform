@@ -18,7 +18,9 @@ backend/spectrograms/
 backend/temp_uploads/
 
 # Training data
-backend/data/
+backend/data/audio/
+backend/data/gtzan_data/
+backend/data/ESC-50-master/
 
 # Local test files
 backend/Test_audios/
