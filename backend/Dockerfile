@@ -16,9 +16,9 @@ RUN pip install --no-cache-dir torch torchaudio torchvision \
 RUN pip install --no-cache-dir flask flask-cors werkzeug demucs \
     numpy pandas librosa soundfile scipy scikit-learn matplotlib \
     Pillow requests tqdm omegaconf einops julius PyYAML gunicorn pandas
-    
+
 COPY . .
 
 EXPOSE $PORT
 
-CMD gunicorn Api.app:app --bind 0.0.0.0:$PORT --timeout 300 --workers 1
+CMD ["sh", "-c", "gunicorn Api.app:app --bind 0.0.0.0:${PORT} --timeout 300 --workers 1"]
