@@ -57,10 +57,12 @@ def run_demucs(file_path):
         "--out", "separated",
         file_path
     ]
+    print(f"[{os.getcwd()}] Running demucs on {file_path}")
     result = subprocess.run(command, capture_output = True, text = True)
 
     if result.returncode != 0:
         print(f"Demucs error:\n{result.stderr}")
+        print(f"Demucs stdout:\n{result.stdout}")
         return None
 
     base_name   = os.path.splitext(os.path.basename(file_path))[0]
