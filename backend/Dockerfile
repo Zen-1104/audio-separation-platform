@@ -17,6 +17,8 @@ RUN pip install --no-cache-dir flask flask-cors werkzeug demucs \
     numpy pandas librosa soundfile scipy scikit-learn matplotlib \
     Pillow requests tqdm omegaconf einops julius PyYAML gunicorn pandas
 
+RUN python -c "from demucs.pretrained import get_model; get_model('htdemucs')"
+
 COPY . .
 
 EXPOSE $PORT
