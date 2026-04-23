@@ -6,8 +6,12 @@ from flask import send_file
 import io
 
 # Path fix
-os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if os.path.exists(BASE_DIR) and os.path.isdir(os.path.join(BASE_DIR, 'Core')):
+    os.chdir(BASE_DIR)
+    sys.path.insert(0, BASE_DIR)
+else:
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import uuid
 import subprocess
@@ -78,28 +82,37 @@ def health_check():
 
 @app.route('/api/separate', methods = ['POST'])
 def separate_audio():
-    if 'audio' not in request.files:
-        return jsonify({"error": "No audio file provided"}), 400
+    try:
+        if 'audio' not in request.files:
+            return jsonify({"error": "No audio file provided"}), 400
+        file = request.files['audio']
+        
+        if file.filename == '':
+            return jsonify({"error": "Empty filename"}), 400
+        
+        if not allowed_file(file.filename):
+            return jsonify({"error": "Unsupported format"}), 422
+        
+        domain = request.form.get('domain', 'auto')
+        job_id = str(uuid.uuid4())[:8]
+        ext = os.path.splitext(secure_filename(file.filename))[1]
+        safe_name = f"{job_id}{ext}"
+        save_path = os.path.join(UPLOAD_FOLDER, safe_name)
+        file.save(save_path)
 
-    file = request.files['audio']
-    if file.filename == '':
-        return jsonify({"error": "Empty filename"}), 400
+        if domain == 'nature':
+            return handle_nature(save_path, job_id)
+        else:
+            return handle_music(save_path, job_id)
+        
+    except Exception as e:
+        import traceback
 
-    if not allowed_file(file.filename):
-        return jsonify({"error": "Unsupported format. Use WAV, MP3, FLAC, or OGG."}), 422
+        print("=== SEPARATE ERROR ===")
+        traceback.print_exc()
+        print("=== END ERROR ===")
 
-    domain  = request.form.get('domain', 'auto')
-    job_id  = str(uuid.uuid4())[:8]
-
-    ext       = os.path.splitext(secure_filename(file.filename))[1]
-    safe_name = f"{job_id}{ext}"
-    save_path = os.path.join(UPLOAD_FOLDER, safe_name)
-    file.save(save_path)
-
-    if domain == 'nature':
-        return handle_nature(save_path, job_id)
-    else:
-        return handle_music(save_path, job_id)
+        return jsonify({"error": str(e)}), 500
 
 def handle_nature(audio_path, job_id):
     """Nature path: classify full clip + generate one spectrogram."""
