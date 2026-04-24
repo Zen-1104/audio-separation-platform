@@ -21,7 +21,7 @@ RUN pip install --no-cache-dir flask flask-cors werkzeug demucs \
 RUN python -c "from demucs.pretrained import get_model; get_model('htdemucs')"
 
 # Cache bust — update this value to force a full rebuild
-ARG CACHE_BUST = 2
+ARG CACHE_BUST=2
 RUN echo "Cache bust: $CACHE_BUST"
 
 COPY . .
