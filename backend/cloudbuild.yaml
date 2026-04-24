@@ -22,4 +22,7 @@ steps:
 images:
   - 'asia-south1-docker.pkg.dev/project-127cfc75-bc57-400d-a9d/cloud-run-source-deploy/audio-spearation-platform:$COMMIT_SHA'
 
+options:
+  logging: CLOUD_LOGGING_ONLY
+
 timeout: '1200s'
