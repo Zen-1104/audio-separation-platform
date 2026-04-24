@@ -102,6 +102,10 @@ def separate_audio():
         safe_name = f"{job_id}{ext}"
         save_path = os.path.join(UPLOAD_FOLDER, safe_name)
         file.save(save_path)
+        print(f"CWD: {os.getcwd()}")
+        print(f"Saved to: {save_path}")
+        print(f"File exists: {os.path.exists(save_path)}")
+        print(f"/tmp contents: {os.listdir('/tmp')}")
         print(f"[{job_id}] Saved upload to {save_path}")
 
         if domain == 'nature':
