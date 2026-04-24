@@ -1,0 +1,25 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'build',
+      '--no-cache',
+      '-t', 'gcr.io/$PROJECT_ID/audio-spearation-platform:$COMMIT_SHA',
+      '-f', 'Dockerfile',
+      '.'
+    ]
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/audio-spearation-platform:$COMMIT_SHA']
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    entrypoint: gcloud
+    args: [
+      'run', 'services', 'update', 'audio-spearation-platform',
+      '--image', 'gcr.io/$PROJECT_ID/audio-spearation-platform:$COMMIT_SHA',
+      '--region', 'asia-south1'
+    ]
+
+images:
+  - 'gcr.io/$PROJECT_ID/audio-spearation-platform:$COMMIT_SHA'
+
+timeout: '1200s'
