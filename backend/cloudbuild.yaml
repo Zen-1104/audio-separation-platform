@@ -3,23 +3,23 @@ steps:
     args: [
       'build',
       '--no-cache',
-      '-t', 'gcr.io/$PROJECT_ID/audio-spearation-platform:$COMMIT_SHA',
+      '-t', 'asia-south1-docker.pkg.dev/project-127cfc75-bc57-400d-a9d/cloud-run-source-deploy/audio-spearation-platform:$COMMIT_SHA',
       '-f', 'Dockerfile',
       '.'
     ]
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/audio-spearation-platform:$COMMIT_SHA']
+    args: ['push', 'asia-south1-docker.pkg.dev/project-127cfc75-bc57-400d-a9d/cloud-run-source-deploy/audio-spearation-platform:$COMMIT_SHA']
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
     entrypoint: gcloud
     args: [
       'run', 'services', 'update', 'audio-spearation-platform',
-      '--image', 'gcr.io/$PROJECT_ID/audio-spearation-platform:$COMMIT_SHA',
+      '--image', 'asia-south1-docker.pkg.dev/project-127cfc75-bc57-400d-a9d/cloud-run-source-deploy/audio-spearation-platform:$COMMIT_SHA',
       '--region', 'asia-south1'
     ]
 
 images:
-  - 'gcr.io/$PROJECT_ID/audio-spearation-platform:$COMMIT_SHA'
+  - 'asia-south1-docker.pkg.dev/project-127cfc75-bc57-400d-a9d/cloud-run-source-deploy/audio-spearation-platform:$COMMIT_SHA'
 
 timeout: '1200s'
