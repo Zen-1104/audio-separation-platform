@@ -24,6 +24,9 @@ backend/data/ESC-50-master/
 
 # Local test files
 backend/Test_audios/
+*.log
+*.wav
+*.mp3
 
 # Frontend
 frontend/node_modules/

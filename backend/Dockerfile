@@ -10,22 +10,25 @@ WORKDIR /app
 
 COPY requirements.txt .
 
-RUN pip install --no-cache-dir torch torchaudio torchvision \
+RUN pip install --no-cache-dir "numpy<2"
+
+RUN pip install --no-cache-dir \
+    torch==2.2.2 \
+    torchaudio==2.2.2 \
+    torchvision==0.17.2 \
     --index-url https://download.pytorch.org/whl/cpu
 
 RUN pip install --no-cache-dir flask flask-cors werkzeug demucs \
-    numpy pandas librosa soundfile scipy scikit-learn matplotlib \
+    pandas librosa soundfile scipy scikit-learn matplotlib \
     Pillow requests tqdm omegaconf einops julius PyYAML gunicorn
 
-# Pre-download htdemucs weights into the image so runtime doesn't need internet
 RUN python -c "from demucs.pretrained import get_model; get_model('htdemucs')"
 
-# Cache bust — update this value to force a full rebuild
-ARG CACHE_BUST=4
+ARG CACHE_BUST=6
 RUN echo "Cache bust: $CACHE_BUST"
 
 COPY . .
 
 EXPOSE $PORT
 
-CMD ["sh", "-c", "gunicorn Api.app:app --bind 0.0.0.0:${PORT} --timeout 600 --workers 1 --capture-output --log-level debug"]
+CMD ["sh", "-c", "PYTHONUNBUFFERED=1 gunicorn Api.app:app --bind 0.0.0.0:${PORT} --timeout 300 --workers 1 --log-level debug --capture-output"]
