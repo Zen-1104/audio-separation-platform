@@ -42,6 +42,7 @@ frontend/.env.production
 ._*
 Thumbs.db
 *.log
+upload_hf.py
 
 # IDE
 .vscode/
